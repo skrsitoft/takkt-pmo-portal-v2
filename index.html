@@ -1599,20 +1599,22 @@ function showToast(msg) {
 <script src="https://cdn/npm/@supabase/supabase-js@2script>
 
 <script>
+console.log("SUPABASE TEST");
+console.log(window.supabase);
+
 const supabaseUrl =
-  'https://xxsbgzbkzpkbgmaibxwp.supabase.co';
+    'https://xxsbgzbkzpkbgmaibxwp.supabase.co';
 
 const supabaseKey =
-  'IDE_RAKD_BE_A_TELJES_SB_PUBLISHABLE_KEYT';
+    'IDE_A_PUBLISHABLE_KEY';
 
 const supabaseClient =
-  window.supabase.createClient(
-    supabaseUrl,
-    supabaseKey
-  );
+    window.supabase.createClient(
+        supabaseUrl,
+        supabaseKey
+    );
 
-console.log('Supabase connected');
-console.log(window.supabase);
+console.log("Supabase connected");
 console.log(supabaseClient);
 </script>
 
