@@ -386,6 +386,9 @@ textarea{resize:vertical;line-height:1.5;}
     <div id="sidebarProjects"></div>
     <button class="sidebar-add" onclick="newProject()">＋ New project</button>
     <div class="sidebar-footer"><p>Data saved in browser storage.<br>Export JSON for PPT generation.</p></div>
+    <button onclick="testConnection()">
+  Test Supabase
+</button>
   </aside>
 
   <!-- ── Main ── -->
@@ -665,6 +668,18 @@ async function storeList(prefix) {
     }
 
     return keys;
+}
+  async function testConnection() {
+
+    const { data, error } =
+        await supabaseClient
+            .from('projects')
+            .select('*');
+
+    console.log(data);
+    console.log(error);
+
+    alert('Connection OK');
 }
 
 // ═══════════════════════════════════════════════════
@@ -1580,5 +1595,14 @@ function showToast(msg) {
 }
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src.jsdelivr.net/npm/@supabase/supabase-js@2script>
+  <script>
+const supabaseUrl = 'https://xxsbgzbkzpkbgmaibxwp.supabase.co';
+
+const supabaseKey = 'AZ_UJ_PUBLISHABLE_KEY';
+
+const supabaseClient =
+  supabase.createClient(supabaseUrl, supabaseKey);
+</script>
 </body>
 </html>
