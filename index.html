@@ -1116,20 +1116,52 @@ async function autoSave() {
 // ═══════════════════════════════════════════════════
 // SAVE SETUP
 // ═══════════════════════════════════════════════════
-function saveSetup() {
-  if (!activeId) return;
-  const p = projects[activeId];
-  p.setup = readSetup();
-  p.milestones = milestones.map(m => ({...m}));
-  storeSave('proj:' + activeId, p);
+async function saveSetup() {
 
-  // update topbar
-  document.getElementById('topbarName').textContent = p.setup.name || 'New Project';
+  if (!activeId) return;
+
+  const p = projects[activeId];
+
+  p.setup = readSetup();
+  p.milestones = milestones.map(m => ({ ...m }));
+
+  const project = {
+    name: p.setup.name,
+    area: p.setup.area,
+    pm: p.setup.pm,
+    owner: p.setup.owner,
+    sponsor: p.setup.sponsor,
+    itlt: p.setup.itlt,
+    short_desc: p.setup.shortDesc,
+    scope: p.setup.scope
+  };
+
+  const { error } =
+    await supabaseClient
+      .from('projects')
+      .insert([project]);
+
+  if (error) {
+    console.error(error);
+    showToast('❌ ' + error.message);
+    return;
+  }
+
+  document.getElementById('topbarName').textContent =
+      p.setup.name || 'New Project';
+
   const aEl = document.getElementById('topbarArea');
-  if (p.setup.area) { aEl.textContent = p.setup.area; aEl.style.display='inline-block'; } else aEl.style.display='none';
+
+  if (p.setup.area) {
+      aEl.textContent = p.setup.area;
+      aEl.style.display = 'inline-block';
+  } else {
+      aEl.style.display = 'none';
+  }
 
   renderSidebar();
-  showToast('✅ Setup saved!');
+
+  showToast('✅ Saved to Supabase!');
 }
 
 function readSetup() {
