@@ -699,24 +699,29 @@ function confirmDelete(id) {
 }
 
 function doDelete(id) {
+  async function doDelete(id) {
+
   if (!id || !projects[id]) return;
 
-  // remove from storage (best effort)
-  try { window.storage.delete('proj:' + id); } catch(e) {}
+  if (!id.startsWith('p_')) {
 
-  // remove from memory
+    const { error } =
+      await supabaseClient
+        .from('projects')
+        .delete()
+        .eq('id', id);
+
+    if (error) {
+      console.error(error);
+      showToast('❌ ' + error.message);
+      return;
+    }
+  }
+
   delete projects[id];
 
-  // reset UI if it was the active project
-  if (activeId === id) {
-    activeId = null;
-    milestones = [];
-    document.getElementById('tabBar').style.display = 'none';
-    document.getElementById('btnExport').style.display = 'none';
-    document.getElementById('btnDelete').style.display = 'none';
-    document.getElementById('topbarName').textContent = 'Select a project';
-    document.getElementById('topbarArea').style.display = 'none';
-  }
+  ...
+}
 
   renderSidebar();
 
