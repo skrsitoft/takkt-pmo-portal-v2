@@ -700,6 +700,7 @@ function confirmDelete(id) {
 
 function doDelete(id) {
   async function doDelete(id) {
+     console.log("DELETE:", id);
 
   if (!id || !projects[id]) return;
 
