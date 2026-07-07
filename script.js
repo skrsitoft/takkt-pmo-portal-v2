@@ -1,3 +1,18 @@
+console.log(window.supabase);
+
+const supabaseUrl =
+  'https://xxsbgzbkzpkbgmaibxwp.supabase.co';
+
+const supabaseKey =
+  'A_TE_PUBLISHABLE_KEYED';
+
+const supabaseClient =
+  window.supabase.createClient(
+    supabaseUrl,
+    supabaseKey
+  );
+
+console.log('Supabase connected');
 
 // ═══════════════════════════════════════════════════
 // STATE
