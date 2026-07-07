@@ -698,9 +698,10 @@ function confirmDelete(id) {
   modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
 }
 
-function doDelete(id) {
+
   async function doDelete(id) {
-     console.log("DELETE:", id);
+
+  console.log("DELETE:", id);
 
   if (!id || !projects[id]) return;
 
@@ -712,6 +713,8 @@ function doDelete(id) {
         .delete()
         .eq('id', id);
 
+    console.log("DELETE ERROR:", error);
+
     if (error) {
       console.error(error);
       showToast('❌ ' + error.message);
@@ -721,16 +724,31 @@ function doDelete(id) {
 
   delete projects[id];
 
-  ...
-}
+  if (activeId === id) {
+    activeId = null;
+    milestones = [];
+
+    document.getElementById('tabBar').style.display = 'none';
+    document.getElementById('btnExport').style.display = 'none';
+    document.getElementById('btnDelete').style.display = 'none';
+
+    document.getElementById('topbarName').textContent =
+      'Select a project';
+
+    document.getElementById('topbarArea').style.display = 'none';
+  }
 
   renderSidebar();
 
-  if (Object.keys(projects).length > 0) showDashboard();
-  else {
+  if (Object.keys(projects).length > 0) {
+    showDashboard();
+  } else {
     showPane('empty');
-    document.getElementById('nav-dashboard').classList.remove('active');
+    document
+      .getElementById('nav-dashboard')
+      .classList.remove('active');
   }
+
   showToast('Project deleted.');
 }
 
