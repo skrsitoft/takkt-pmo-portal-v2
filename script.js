@@ -4,7 +4,7 @@ const supabaseUrl =
   'https://xxsbgzbkzpkbgmaibxwp.supabase.co';
 
 const supabaseKey =
-  'A_TE_PUBLISHABLE_KEYED';
+  'sb_publishable_h_hO-uJf4YbbXJ4ziAeyKQ_FrXQbK7_';
 
 const supabaseClient =
   window.supabase.createClient(
@@ -1047,22 +1047,3 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 3000);
 }
 
-
-
-console.log("SUPABASE TEST");
-console.log(window.supabase);
-
-const supabaseUrl =
-  'https://xxsbgzbkzpkbgmaibxwp.supabase.co';
-
-const supabaseKey =
-  'sb_publishable_h_hO-uJf4YbbXJ4ziAeyKQ_FrXQbK7_';
-
-const supabaseClient =
-  window.supabase.createClient(
-    supabaseUrl,
-    supabaseKey
-  );
-
-console.log('Supabase connected');
-console.log(supabaseClient);
