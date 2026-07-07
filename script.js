@@ -1182,5 +1182,12 @@ function showSnapshot(projectId, date) {
     console.log("SNAPSHOT DATA");
     console.log(snap);
 
+    alert(
+      JSON.stringify(
+        snap,
+        null,
+        2
+      )
+    );
 }
 
