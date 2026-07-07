@@ -565,7 +565,8 @@ async function saveSetup() {
   };
 
   let error;
-
+console.log("ACTIVE ID:", activeId);
+console.log("IS NEW:", activeId.startsWith('p_'));
 if (!activeId.startsWith('p_')) {
 
   ({ error } = await supabaseClient
