@@ -675,8 +675,7 @@ async function saveWeekly() {
 
     date: p.weekly.date,
 
-    scopeText:
-        p.setup?.scope || '',
+    scopeText:p.setup?.scope || '',
 
     overall: p.weekly.health?.overall,
     scope: p.weekly.health?.scope,
@@ -1199,12 +1198,39 @@ function showSnapshot(projectId, date) {
     console.log("SNAPSHOT DATA");
     console.log(snap);
 
-    alert(
-      JSON.stringify(
-        snap,
-        null,
-        2
-      )
-    );
+    const clone = structuredClone(p);
+
+clone.weekly = {
+    date: snap.date,
+
+    health: {
+        overall: snap.overall,
+        scope: snap.scope,
+        schedule: snap.schedule,
+        risk: snap.risk,
+        quality: snap.quality,
+        overallNote: snap.note
+    },
+
+    keyUpdates:
+        snap.keyUpdates || [],
+
+    budget:
+        snap.budget || {},
+
+    risks:
+        snap.risks || [],
+
+    milestones:
+        snap.milestones || []
+};
+
+clone.milestones =
+    snap.milestones || [];
+
+clone.setup.scope =
+    snap.scopeText || '';
+
+showSnapshotOnePager(clone);
 }
 
