@@ -382,9 +382,14 @@ document.addEventListener('DOMContentLoaded', async () => {
           shortDesc: row.short_desc || '',
           scope: row.scope || ''
         },
+          weekly: row.weekly_data || {},
 
-        weekly: {},
-        milestones: []
+          milestones:
+            row.milestones || [],
+
+          snapshots:
+            row.snapshots || []
+
 
       };
 
@@ -636,19 +641,30 @@ function readSetup() {
 // ═══════════════════════════════════════════════════
 // SAVE WEEKLY
 // ═══════════════════════════════════════════════════
-function saveWeekly() {
+async function saveWeekly() {
+
   if (!activeId) return;
+
   readWeeklyMs();
+
   const p = projects[activeId];
-  p.milestones = milestones.map(m => ({...m}));
+
+  p.milestones = milestones.map(m => ({ ...m }));
+
   const weekly = readWeekly();
 
   // ── snapshot: save current week before overwriting ──
   if (p.weekly && p.weekly.date) {
+
     if (!p.snapshots) p.snapshots = [];
-    // avoid duplicate snapshots for same date
-    const exists = p.snapshots.find(s => s.date === p.weekly.date);
+
+    const exists =
+      p.snapshots.find(
+        s => s.date === p.weekly.date
+      );
+
     if (!exists) {
+
       p.snapshots.unshift({
         date:       p.weekly.date,
         overall:    p.weekly.health?.overall,
@@ -660,10 +676,52 @@ function saveWeekly() {
         keyUpdates: p.weekly.keyUpdates || [],
         progress:   p.weekly.budget?.progress,
       });
-      // keep max 20 snapshots
-      if (p.snapshots.length > 20) p.snapshots = p.snapshots.slice(0, 20);
+
+      if (p.snapshots.length > 20) {
+        p.snapshots =
+          p.snapshots.slice(0, 20);
+      }
     }
   }
+
+  p.weekly = weekly;
+
+  const { error } =
+    await supabaseClient
+      .from('projects')
+      .update({
+
+        weekly_data: p.weekly || {},
+
+        milestones:
+          p.milestones || [],
+
+        risks:
+          p.weekly?.risks || [],
+
+        snapshots:
+          p.snapshots || []
+
+      })
+      .eq('id', activeId);
+
+  if (error) {
+
+    console.error(error);
+
+    showToast(
+      '❌ ' + error.message
+    );
+
+    return;
+  }
+
+  renderSidebar();
+
+  showToast(
+    '✅ Week saved to Supabase!'
+  );
+}
 
   p.weekly = weekly;
   storeSave('proj:' + activeId, p);
