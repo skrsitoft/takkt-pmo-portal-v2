@@ -352,7 +352,8 @@ function showOnePager(id) {
 // ONE PAGER SNAOSHOT
 // ═══════════════════════════════════════════════════
 
-
+console.log("CLONE");
+console.log(clone);
 function showSnapshotOnePager(project) {
 
   const p = project;
