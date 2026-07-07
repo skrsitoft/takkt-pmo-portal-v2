@@ -1341,7 +1341,7 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 3000);
 }
 function showSnapshot(projectId, date) {
-
+  
     const p = projects[projectId];
 
     if (!p) return;
