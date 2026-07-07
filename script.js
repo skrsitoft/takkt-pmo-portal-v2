@@ -672,16 +672,28 @@ async function saveWeekly() {
     if (!exists) {
 
       p.snapshots.unshift({
-        date:       p.weekly.date,
-        overall:    p.weekly.health?.overall,
-        scope:      p.weekly.health?.scope,
-        schedule:   p.weekly.health?.schedule,
-        risk:       p.weekly.health?.risk,
-        quality:    p.weekly.health?.quality,
-        note:       p.weekly.health?.overallNote,
-        keyUpdates: p.weekly.keyUpdates || [],
-        progress:   p.weekly.budget?.progress,
-      });
+    date: p.weekly.date,
+
+    overall: p.weekly.health?.overall,
+    scope: p.weekly.health?.scope,
+    schedule: p.weekly.health?.schedule,
+    risk: p.weekly.health?.risk,
+    quality: p.weekly.health?.quality,
+
+    note: p.weekly.health?.overallNote,
+
+    keyUpdates: p.weekly.keyUpdates || [],
+
+    progress: p.weekly.budget?.progress,
+
+    budget: p.weekly.budget || {},
+
+    milestones:
+        p.weekly.milestones || [],
+
+    risks:
+        p.weekly.risks || []
+});
 
       if (p.snapshots.length > 20) {
         p.snapshots =
