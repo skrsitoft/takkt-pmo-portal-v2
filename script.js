@@ -344,6 +344,7 @@ function showOnePager(id) {
 // ═══════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════
+
 document.addEventListener('DOMContentLoaded', async () => {
   console.log("INIT START");
   document.getElementById('btnDelete').addEventListener('click', () => {
@@ -360,6 +361,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (error) {
     console.error(error);
   } else {
+    console.log("DATA FROM DB");
+    console.log(data);
 
     projects = {};
 
@@ -386,6 +389,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       };
 
     });
+    console.log("PROJECTS AFTER BUILD");
+    console.log(projects);
 
   }
 
