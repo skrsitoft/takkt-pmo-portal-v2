@@ -279,8 +279,7 @@ textarea{resize:vertical;line-height:1.5;}
 
 /* ── One Pager Modal ── */
 .op-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:400;display:flex;align-items:flex-start;justify-content:center;padding:24px 16px;overflow-y:auto;}
-.op-modal{background:var(--grey-bg);border-radius:10px;width:100%;max-width:960px;box-shadow:0 24px 80px rgba(0,0,0,.35);overflow:hidden;position:relative;}
-
+.op-modal{ background:var(--grey-bg); border-radius:10px; width:96%; max-width:1500px; box-shadow:0 24px 80px rgba(0,0,0,.35); overflow:hidden; position:relative; }
 .op-topbar{background:var(--black);padding:14px 22px;display:flex;align-items:center;justify-content:space-between;}
 .op-title{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:#fff;}
 .op-update-date {font-size: 16px;font-weight: 500;color: #9ca3af;margin-top: 2px;margin-bottom: 6px;}

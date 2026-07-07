@@ -455,7 +455,7 @@ function showSnapshotOnePager(project) {
       <div class="op-topbar">
         <div>
           <div class="op-title">${esc(s.name||'Unnamed Project')}</div>
-          <div class="op-update-date">Latest Update: ${esc(w.date || 'N/A')}</div>
+          <div class="op-update-date"> 📅 Viewing Snapshot: ${esc(w.date || 'N/A')} </div>
           <div class="op-meta">${esc(s.area||'')}${s.pm ? ' · PM: '+esc(s.pm) : ''}${s.owner ? ' · Owner: '+esc(s.owner) : ''}${s.sponsor ? ' · Sponsor: '+esc(s.sponsor) : ''}</div>
         </div>
         <button class="op-close" id="opClose">✕</button>
@@ -532,7 +532,7 @@ function showSnapshotOnePager(project) {
       <div class="op-footer">
         <span class="op-footer-date">Week of: ${esc(w.date||'—')} · Generated: ${new Date().toLocaleDateString()}</span>
         <div style="display:flex;gap:8px;">
-          <button class="btn-ghost" id="opEdit">✏️ Edit project</button>
+          <button class="btn-ghost" id="opLatest">2  ← Back to Latest3</button>
           <button class="btn-ghost" id="opCloseBtn">Close</button>
         </div>
       </div>
@@ -543,7 +543,7 @@ function showSnapshotOnePager(project) {
 
   document.getElementById('opClose').addEventListener('click', () => overlay.remove());
   document.getElementById('opCloseBtn').addEventListener('click', () => overlay.remove());
-  document.getElementById('opEdit').addEventListener('click', () => {overlay.remove();});
+  document.getElementById('opLatest') .addEventListener('click', () => { overlay.remove(); showOnePager(p.id); });
   overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
 }
 // ═══════════════════════════════════════════════════
