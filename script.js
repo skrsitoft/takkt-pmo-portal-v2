@@ -564,16 +564,45 @@ async function saveSetup() {
     scope: p.setup.scope
   };
 
-  const { error } =
-    await supabaseClient
-      .from('projects')
-      .insert([project]);
+  let error;
 
-  if (error) {
-    console.error(error);
-    showToast('❌ ' + error.message);
-    return;
+if (!activeId.startsWith('p_')) {
+
+  ({ error } = await supabaseClient
+    .from('projects')
+    .update(project)
+    .eq('id', activeId));
+
+} else {
+
+  const result = await supabaseClient
+    .from('projects')
+    .insert([project])
+    .select()
+    .single();
+
+  error = result.error;
+
+  if (!error) {
+
+    delete projects[activeId];
+
+    activeId = result.data.id;
+
+    projects[activeId] = {
+      id: result.data.id,
+      setup: p.setup,
+      weekly: p.weekly || {},
+      milestones: p.milestones || []
+    };
   }
+}
+
+if (error) {
+  console.error(error);
+  showToast('❌ ' + error.message);
+  return;
+}
 
   document.getElementById('topbarName').textContent =
       p.setup.name || 'New Project';
