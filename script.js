@@ -672,6 +672,7 @@ async function saveWeekly() {
     if (!exists) {
 
       p.snapshots.unshift({
+
     date: p.weekly.date,
 
     overall: p.weekly.health?.overall,
@@ -688,11 +689,10 @@ async function saveWeekly() {
 
     budget: p.weekly.budget || {},
 
-    milestones:
-        p.weekly.milestones || [],
+    milestones: p.milestones || [],
 
-    risks:
-        p.weekly.risks || []
+    risks: p.weekly.risks || []
+
 });
 
       if (p.snapshots.length > 20) {
