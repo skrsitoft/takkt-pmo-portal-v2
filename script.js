@@ -335,12 +335,47 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
   showLoading(true);
   try {
-    const keys = await storeList('proj:');
-    for (const key of keys) {
-      const data = await storeGet(key);
-      if (data) projects[data.id] = data;
-    }
-  } catch(e) {}
+
+  const { data, error } =
+    await supabaseClient
+      .from('projects')
+      .select('*');
+
+  if (error) {
+    console.error(error);
+  } else {
+
+    projects = {};
+
+    data.forEach(row => {
+
+      projects[row.id] = {
+
+        id: row.id,
+
+        setup: {
+          name: row.name || '',
+          area: row.area || '',
+          pm: row.pm || '',
+          owner: row.owner || '',
+          sponsor: row.sponsor || '',
+          itlt: row.itlt || '',
+          shortDesc: row.short_desc || '',
+          scope: row.scope || ''
+        },
+
+        weekly: {},
+        milestones: []
+
+      };
+
+    });
+
+  }
+
+} catch(e) {
+  console.error(e);
+}
   renderSidebar();
   showLoading(false);
   document.getElementById('w_date').value = new Date().toISOString().split('T')[0];
