@@ -250,7 +250,7 @@ function showOnePager(id) {
       <div class="op-topbar">
         <div>
           <div class="op-title">${esc(s.name||'Unnamed Project')}</div>
-          <div class="op-title">Latest Update: ${esc(w.date || 'N/A')}</div>
+          <div class="op-update-date">Latest Update: ${esc(w.date || 'N/A')}</div>
           <div class="op-meta">${esc(s.area||'')}${s.pm ? ' · PM: '+esc(s.pm) : ''}${s.owner ? ' · Owner: '+esc(s.owner) : ''}${s.sponsor ? ' · Sponsor: '+esc(s.sponsor) : ''}</div>
         </div>
         <button class="op-close" id="opClose">✕</button>

@@ -283,6 +283,7 @@ textarea{resize:vertical;line-height:1.5;}
 
 .op-topbar{background:var(--black);padding:14px 22px;display:flex;align-items:center;justify-content:space-between;}
 .op-title{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:#fff;}
+.op-update-date {font-size: 16px;font-weight: 500;color: #9ca3af;margin-top: 2px;margin-bottom: 6px;}
 .op-meta{font-size:11px;color:#888;margin-top:2px;}
 .op-close{background:none;border:none;color:#888;font-size:20px;cursor:pointer;padding:4px 8px;border-radius:4px;transition:color .15s;}
 .op-close:hover{color:#fff;}
