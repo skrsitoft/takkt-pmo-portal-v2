@@ -352,10 +352,10 @@ function showOnePager(id) {
 // ONE PAGER SNAOSHOT
 // ═══════════════════════════════════════════════════
 
-console.log("CLONE");
-console.log(clone);
+
 function showSnapshotOnePager(project) {
 
+  
   const p = project;
 
   const s = p.setup || {};
@@ -1398,6 +1398,8 @@ function showSnapshot(projectId, date) {
     console.log(snap);
 
     const clone = structuredClone(p);
+    console.log("CLONE");
+    console.log(clone);
 
 clone.weekly = {
     date: snap.date,
