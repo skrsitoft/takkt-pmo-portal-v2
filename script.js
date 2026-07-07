@@ -225,7 +225,12 @@ function showOnePager(id) {
             <thead><tr><th>Week of</th><th>Overall</th><th>Scope</th><th>Schedule</th><th>Risk</th><th>Quality</th><th>Progress</th><th>Note</th></tr></thead>
             <tbody>
               ${snapshots.map(s => `<tr>
-                <td style="white-space:nowrap;font-weight:600">${esc(s.date||'—')}</td>
+                <td style="white-space:nowrap;font-weight:600">
+                <a href="#"
+                onclick="showSnapshot('${p.id}','${s.date}')">
+                ${esc(s.date || '—')}
+              </a>
+            </td>
                 <td>${snapIcon(s.overall)} ${statusLabel(s.overall)}</td>
                 <td>${snapIcon(s.scope)} ${statusLabel(s.scope)}</td>
                 <td>${snapIcon(s.schedule)} ${statusLabel(s.schedule)}</td>
@@ -1162,5 +1167,14 @@ function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 3000);
+}
+function showSnapshot(projectId, date) {
+
+    console.log("SNAPSHOT CLICK");
+
+    console.log(projectId);
+
+    console.log(date);
+
 }
 
