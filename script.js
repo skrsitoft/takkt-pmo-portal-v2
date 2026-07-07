@@ -835,68 +835,50 @@ async function saveWeekly() {
     if (!p.snapshots) p.snapshots = [];
 
     const exists =
-  p.snapshots.find(
-    s => s.date === p.weekly.date
-  );
+      p.snapshots.find(
+        s => s.date === p.weekly.date
+      );
 
-if (exists) {
+    if (exists) {
 
-    showToast(
-      '⚠️ You are updating today\'s report. No new snapshot will be created.'
-    );
+        showToast(
+          "⚠️ You are updating today's report. No new snapshot will be created."
+        );
 
-} else {
+    } else {
 
-    p.snapshots.unshift({
+        p.snapshots.unshift({
 
-        date: p.weekly.date,
+            date: p.weekly.date,
 
-        scopeText:
-            p.setup?.scope || '',
+            scopeText: p.setup?.scope || '',
 
-        overall:
-            p.weekly.health?.overall,
+            overall: p.weekly.health?.overall,
+            scope: p.weekly.health?.scope,
+            schedule: p.weekly.health?.schedule,
+            risk: p.weekly.health?.risk,
+            quality: p.weekly.health?.quality,
 
-        scope:
-            p.weekly.health?.scope,
+            note: p.weekly.health?.overallNote,
 
-        schedule:
-            p.weekly.health?.schedule,
+            keyUpdates: p.weekly.keyUpdates || [],
 
-        risk:
-            p.weekly.health?.risk,
+            progress: p.weekly.budget?.progress,
 
-        quality:
-            p.weekly.health?.quality,
+            budget: p.weekly.budget || {},
 
-        note:
-            p.weekly.health?.overallNote,
+            milestones: p.milestones || [],
 
-        keyUpdates:
-            p.weekly.keyUpdates || [],
+            risks: p.weekly.risks || []
 
-        progress:
-            p.weekly.budget?.progress,
+        });
 
-        budget:
-            p.weekly.budget || {},
-
-        milestones:
-            p.milestones || [],
-
-        risks:
-            p.weekly.risks || []
-
-    });
-
-    if (p.snapshots.length > 20) {
-
-        p.snapshots =
-            p.snapshots.slice(0, 20);
-
+        if (p.snapshots.length > 20) {
+            p.snapshots =
+              p.snapshots.slice(0, 20);
+        }
     }
 }
-
   p.weekly = weekly;
 
   const { error } =
