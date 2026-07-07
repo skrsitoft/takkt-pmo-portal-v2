@@ -1327,24 +1327,7 @@ function exportExcel() {
 // ═══════════════════════════════════════════════════
 // DEMO DATA
 // ═══════════════════════════════════════════════════
-function loadDemo() {
-  setVal('s_name','Test Project'); setVal('s_area','Efficiency');
-  setVal('s_pm','Kristóf'); setVal('s_owner','Kristóf ');
-  setVal('s_sponsor','Akos '); setVal('s_itlt','Akos ');
-  setVal('s_shortdesc','Moc project');
-  setVal('s_scope','This is the scope');
 
-  milestones = []; nextMsId = 1;
-  [
-    { name:'Milestone 1 ', dueDateOrig:'2026-03-31' },
-    { name:'Milestone 2',   dueDateOrig:'2026-05-31' },
-    { name:'Milestone 3',   dueDateOrig:'2026-09-30' },
-    { name:'Milestone 4',       dueDateOrig:'2026-12-31' },
-  ].forEach(m => milestones.push({ id:nextMsId++, dueDateLatest:'', complete:'', status:'', done:'no', ...m }));
-
-  renderSetupMs(); renderWeeklyMs();
-  showToast('Demo data loaded!');
-}
 
 // ═══════════════════════════════════════════════════
 // TAB / PANE SWITCHING
