@@ -851,7 +851,7 @@ async function saveWeekly() {
 
         p.snapshots.unshift({
 
-            date: today,,
+            date: today,
 
             scopeText: p.setup?.scope || '',
 
