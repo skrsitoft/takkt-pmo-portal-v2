@@ -347,6 +347,204 @@ function showOnePager(id) {
   overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
 }
 
+
+// ═══════════════════════════════════════════════════
+// ONE PAGER SNAOSHOT
+// ═══════════════════════════════════════════════════
+
+
+function showSnapshotOnePager(project) {
+
+  const p = project;
+
+  const s = p.setup || {};
+  const w = p.weekly || {};
+  const h = w.health || {};
+  const b = w.budget || {};
+
+  // remove existing
+  const ex = document.getElementById('opModal');
+  if (ex) ex.remove();
+
+  
+  // ── helpers ──
+  const statusLabel = v => ({ green:'On Track', yellow:'At Risk', red:'Off Track', grey:'N/A' }[v] || '—');
+  const healthRow = (label, val, note) => `
+    <tr>
+      <td>${label}</td>
+      <td><span class="op-health-badge ${val||'grey'}">${statusLabel(val)}</span>${note ? `<span class="op-health-note">${esc(note)}</span>` : ''}</td>
+    </tr>`;
+
+  const kpiColor = v => { const n = parseFloat(v); if (isNaN(n)) return ''; return n >= 1 ? 'green' : 'red'; };
+
+  // ── scope lines ──
+  const scopeLines = (s.scope||'').split('\n').filter(Boolean).map(l =>
+    `<div class="op-scope-line">${esc(l.replace(/^[•\-]\s*/,''))}</div>`).join('');
+
+  // ── key updates ──
+  const bullets = (w.keyUpdates||[]).filter(Boolean).map(u =>
+    `<div class="op-bullet">${esc(u)}</div>`).join('') || '<span style="color:#ccc">No updates this week.</span>';
+
+  // ── milestones ──
+  const msRows = (w.milestones||[]).filter(m => m.name).map(m => {
+    const pct = m.complete ? parseInt(m.complete) : null;
+    const pctColor = pct === null ? '' : pct >= 100 ? 'color:var(--green)' : pct >= 70 ? 'color:var(--yellow)' : 'color:var(--red)';
+    const statusDot = m.status ? `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${m.status==='green'?'var(--green)':m.status==='yellow'?'#EAB308':m.status==='red'?'var(--red)':'#ccc'};margin-right:4px;"></span>` : '';
+    return `<tr>
+      <td>${esc(m.name)}</td>
+      <td style="white-space:nowrap">${esc(m.dueDateOrig||'—')}</td>
+      <td style="white-space:nowrap">${esc(m.dueDateLatest||'—')}</td>
+      <td class="op-ms-pct" style="${pctColor}">${pct !== null ? pct+'%' : '—'}</td>
+      <td>${statusDot}${statusLabel(m.status)}</td>
+      <td>${m.done==='yes' ? '✓' : ''}</td>
+    </tr>`;
+  }).join('');
+
+
+
+  // ── risks ──
+  const riskRows = (w.risks||[]).filter(r => r.description).map(r => `
+    <tr>
+      <td><span class="pri-badge ${r.priority||''}">${esc(r.type||'R')} · ${esc(r.priority||'')}</span></td>
+      <td>${esc(r.description||'')}</td>
+      <td>${esc(r.owner||'—')}</td>
+      <td>${esc(r.mitigation||'—')}</td>
+      <td style="white-space:nowrap">${esc(r.dueDate||'—')}</td>
+    </tr>`).join('');
+
+  // ── snapshot history ──
+  const snapshots = (p.snapshots || []);
+  const snapIcon = v => ({ green:'🟢', yellow:'🟡', red:'🔴', grey:'⚪' }[v] || '⚪');
+  const historyHtml = snapshots.length ? `
+    <div style="padding:0 20px 20px;">
+      <div class="op-card">
+        <div class="op-card-header"><h3>📅 Status History</h3></div>
+        <div class="op-card-body" style="padding:0;overflow-x:auto;">
+          <table class="op-ms-table">
+            <thead><tr><th>Week of</th><th>Overall</th><th>Scope</th><th>Schedule</th><th>Risk</th><th>Quality</th><th>Progress</th><th>Note</th></tr></thead>
+            <tbody>
+              ${snapshots.map(s => `<tr>
+                <td style="white-space:nowrap;font-weight:600">
+                <a href="#"
+                onclick="showSnapshot('${p.id}','${s.date}')">
+                ${esc(s.date || '—')}
+              </a>
+            </td>
+                <td>${snapIcon(s.overall)} ${statusLabel(s.overall)}</td>
+                <td>${snapIcon(s.scope)} ${statusLabel(s.scope)}</td>
+                <td>${snapIcon(s.schedule)} ${statusLabel(s.schedule)}</td>
+                <td>${snapIcon(s.risk)} ${statusLabel(s.risk)}</td>
+                <td>${snapIcon(s.quality)} ${statusLabel(s.quality)}</td>
+                <td>${s.progress ? s.progress+'%' : '—'}</td>
+                <td style="color:var(--grey-mid)">${esc(s.note||'')}</td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>` : '';
+
+  const overlay = document.createElement('div');
+  overlay.className = 'op-overlay';
+  overlay.id = 'opModal';
+  overlay.innerHTML = `
+    <div class="op-modal">
+
+      <!-- top bar -->
+      <div class="op-topbar">
+        <div>
+          <div class="op-title">${esc(s.name||'Unnamed Project')}</div>
+          <div class="op-update-date">Latest Update: ${esc(w.date || 'N/A')}</div>
+          <div class="op-meta">${esc(s.area||'')}${s.pm ? ' · PM: '+esc(s.pm) : ''}${s.owner ? ' · Owner: '+esc(s.owner) : ''}${s.sponsor ? ' · Sponsor: '+esc(s.sponsor) : ''}</div>
+        </div>
+        <button class="op-close" id="opClose">✕</button>
+      </div>
+
+      <!-- row 1: scope + health -->
+      <div class="op-body">
+
+        <div class="op-card">
+          <div class="op-card-header"><h3>🎯 Scope & Objectives</h3></div>
+          <div class="op-card-body">${scopeLines || '<span style="color:#ccc">No scope defined.</span>'}</div>
+        </div>
+
+        <div class="op-card">
+          <div class="op-card-header"><h3>🏥 Project Health</h3></div>
+          <div class="op-card-body" style="padding:0;">
+            <table class="op-health-table">
+              ${healthRow('Overall',  h.overall,  h.overallNote)}
+              ${healthRow('Scope',    h.scope,    h.scopeNote)}
+              ${healthRow('Schedule', h.schedule, h.scheduleNote)}
+              ${healthRow('Risk',     h.risk,     h.riskNote)}
+              ${healthRow('Quality',  h.quality,  h.qualityNote)}
+            </table>
+            ${(b.progress || b.budgetKEUR || b.spendToDate) ? `
+            <div style="padding:12px 14px;border-top:1px solid var(--grey-light);">
+              <div style="font-size:10px;font-weight:700;color:var(--grey-mid);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;">Budget</div>
+              <div class="op-budget-grid">
+                ${b.progress    ? `<div class="op-kpi"><span class="op-kpi-label">Progress</span><span class="op-kpi-val">${esc(b.progress)}%</span></div>` : ''}
+                ${b.budgetKEUR  ? `<div class="op-kpi"><span class="op-kpi-label">Budget (kEUR)</span><span class="op-kpi-val">${esc(b.budgetKEUR)}</span></div>` : ''}
+                ${b.spendToDate ? `<div class="op-kpi"><span class="op-kpi-label">Spend to Date</span><span class="op-kpi-val">${esc(b.spendToDate)}</span></div>` : ''}
+                ${b.spendForecast ? `<div class="op-kpi"><span class="op-kpi-label">Forecast</span><span class="op-kpi-val">${esc(b.spendForecast)}</span></div>` : ''}
+                ${b.cpiBudget   ? `<div class="op-kpi"><span class="op-kpi-label">CPI (Budget)</span><span class="op-kpi-val ${kpiColor(b.cpiBudget)}">${esc(b.cpiBudget)}</span></div>` : ''}
+                ${b.cpiForecast ? `<div class="op-kpi"><span class="op-kpi-label">CPI (Forecast)</span><span class="op-kpi-val ${kpiColor(b.cpiForecast)}">${esc(b.cpiForecast)}</span></div>` : ''}
+              </div>
+            </div>` : ''}
+          </div>
+        </div>
+
+        <!-- row 2: key updates -->
+        <div class="op-card">
+          <div class="op-card-header"><h3>📢 Key Updates</h3></div>
+          <div class="op-card-body">${bullets}</div>
+        </div>
+
+        <!-- row 3: milestones (full width) -->
+        <div class="op-card">
+          <div class="op-card-header"><h3>🏁 Key Milestones</h3></div>
+          <div class="op-card-body" style="padding:0;overflow-x:auto;">
+            ${msRows ? `<table class="op-ms-table">
+              <thead><tr><th>Name</th><th>Due (orig.)</th><th>Due (latest)</th><th>%</th><th>Status</th><th>Done</th></tr></thead>
+              <tbody>${msRows}</tbody>
+            </table>` : '<div style="padding:14px;color:#ccc;font-size:13px;">No milestones defined.</div>'}
+          </div>
+        </div>
+
+      </div>
+
+      <!-- risks full width -->
+      <div style="padding:0 20px 20px;">
+        <div class="op-card">
+          <div class="op-card-header"><h3>⚠️ Risks & Issues</h3></div>
+          <div class="op-card-body" style="padding:0;overflow-x:auto;">
+            ${riskRows ? `<table class="op-risk-table">
+              <thead><tr><th>Priority</th><th>Description</th><th>Owner</th><th>Mitigation</th><th>Due Date</th></tr></thead>
+              <tbody>${riskRows}</tbody>
+            </table>` : '<div style="padding:14px;color:#ccc;font-size:13px;">No risks defined.</div>'}
+          </div>
+        </div>
+      </div>
+
+      ${historyHtml}
+
+      <!-- footer -->
+      <div class="op-footer">
+        <span class="op-footer-date">Week of: ${esc(w.date||'—')} · Generated: ${new Date().toLocaleDateString()}</span>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-ghost" id="opEdit">✏️ Edit project</button>
+          <button class="btn-ghost" id="opCloseBtn">Close</button>
+        </div>
+      </div>
+
+    </div>`;
+
+  document.body.appendChild(overlay);
+
+  document.getElementById('opClose').addEventListener('click', () => overlay.remove());
+  document.getElementById('opCloseBtn').addEventListener('click', () => overlay.remove());
+  document.getElementById('opEdit').addEventListener('click', () => {overlay.remove();});
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+}
 // ═══════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════
