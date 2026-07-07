@@ -414,7 +414,36 @@ function showSnapshotOnePager(project) {
     </tr>`).join('');
 
   // ── snapshot history ──
-  
+  const snapshots = (p.snapshots || []);
+  const snapIcon = v => ({ green:'🟢', yellow:'🟡', red:'🔴', grey:'⚪' }[v] || '⚪');
+  const historyHtml = snapshots.length ? `
+    <div style="padding:0 20px 20px;">
+      <div class="op-card">
+        <div class="op-card-header"><h3>📅 Status History</h3></div>
+        <div class="op-card-body" style="padding:0;overflow-x:auto;">
+          <table class="op-ms-table">
+            <thead><tr><th>Week of</th><th>Overall</th><th>Scope</th><th>Schedule</th><th>Risk</th><th>Quality</th><th>Progress</th><th>Note</th></tr></thead>
+            <tbody>
+              ${snapshots.map(s => `<tr>
+                <td style="white-space:nowrap;font-weight:600">
+                <a href="#"
+                onclick="showSnapshot('${p.id}','${s.date}')">
+                ${esc(s.date || '—')}
+              </a>
+            </td>
+                <td>${snapIcon(s.overall)} ${statusLabel(s.overall)}</td>
+                <td>${snapIcon(s.scope)} ${statusLabel(s.scope)}</td>
+                <td>${snapIcon(s.schedule)} ${statusLabel(s.schedule)}</td>
+                <td>${snapIcon(s.risk)} ${statusLabel(s.risk)}</td>
+                <td>${snapIcon(s.quality)} ${statusLabel(s.quality)}</td>
+                <td>${s.progress ? s.progress+'%' : '—'}</td>
+                <td style="color:var(--grey-mid)">${esc(s.note||'')}</td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>` : '';
 
   const overlay = document.createElement('div');
   overlay.className = 'op-overlay';
