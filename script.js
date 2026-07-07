@@ -828,6 +828,8 @@ async function saveWeekly() {
   p.milestones = milestones.map(m => ({ ...m }));
 
   const weekly = readWeekly();
+  const today =
+  new Date().toISOString().split('T')[0];
 
   // ── snapshot: save current week before overwriting ──
   if (p.weekly && p.weekly.date) {
@@ -835,9 +837,9 @@ async function saveWeekly() {
     if (!p.snapshots) p.snapshots = [];
 
     const exists =
-      p.snapshots.find(
-        s => s.date === p.weekly.date
-      );
+  p.snapshots.find(
+    s => s.date === today
+  );
 
     if (exists) {
 
@@ -849,7 +851,7 @@ async function saveWeekly() {
 
         p.snapshots.unshift({
 
-            date: p.weekly.date,
+            date: today,,
 
             scopeText: p.setup?.scope || '',
 
