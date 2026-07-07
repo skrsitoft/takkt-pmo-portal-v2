@@ -582,6 +582,7 @@ console.log(projects);
   renderSidebar();
   showLoading(false);
   document.getElementById('w_date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('w_date').disabled = true;
   // auto-open dashboard if projects exist
   if (Object.keys(projects).length > 0) showDashboard();
 });
@@ -834,46 +835,67 @@ async function saveWeekly() {
     if (!p.snapshots) p.snapshots = [];
 
     const exists =
-      p.snapshots.find(
-        s => s.date === p.weekly.date
-      );
+  p.snapshots.find(
+    s => s.date === p.weekly.date
+  );
 
-    if (!exists) {
+if (exists) {
 
-      p.snapshots.unshift({
+    showToast(
+      '⚠️ You are updating today\'s report. No new snapshot will be created.'
+    );
 
-    date: p.weekly.date,
+} else {
 
-    scopeText:p.setup?.scope || '',
+    p.snapshots.unshift({
 
-    overall: p.weekly.health?.overall,
-    scope: p.weekly.health?.scope,
-    schedule: p.weekly.health?.schedule,
-    risk: p.weekly.health?.risk,
-    quality: p.weekly.health?.quality,
+        date: p.weekly.date,
 
-    note: p.weekly.health?.overallNote,
+        scopeText:
+            p.setup?.scope || '',
 
-    keyUpdates: p.weekly.keyUpdates || [],
+        overall:
+            p.weekly.health?.overall,
 
-    progress: p.weekly.budget?.progress,
+        scope:
+            p.weekly.health?.scope,
 
-    budget: p.weekly.budget || {},
+        schedule:
+            p.weekly.health?.schedule,
 
-    milestones: p.milestones || [],
+        risk:
+            p.weekly.health?.risk,
 
-    risks: p.weekly.risks || []
+        quality:
+            p.weekly.health?.quality,
 
-});
+        note:
+            p.weekly.health?.overallNote,
 
+        keyUpdates:
+            p.weekly.keyUpdates || [],
 
+        progress:
+            p.weekly.budget?.progress,
 
-      if (p.snapshots.length > 20) {
+        budget:
+            p.weekly.budget || {},
+
+        milestones:
+            p.milestones || [],
+
+        risks:
+            p.weekly.risks || []
+
+    });
+
+    if (p.snapshots.length > 20) {
+
         p.snapshots =
-          p.snapshots.slice(0, 20);
-      }
+            p.snapshots.slice(0, 20);
+
     }
-  }
+}
 
   p.weekly = weekly;
 
