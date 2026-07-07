@@ -330,6 +330,7 @@ function showOnePager(id) {
 // INIT
 // ═══════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', async () => {
+  console.log("INIT START");
   document.getElementById('btnDelete').addEventListener('click', () => {
     if (activeId) confirmDelete(activeId);
   });
@@ -376,6 +377,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 } catch(e) {
   console.error(e);
 }
+console.log("PROJECTS:");
+console.log(projects);
   renderSidebar();
   showLoading(false);
   document.getElementById('w_date').value = new Date().toISOString().split('T')[0];
