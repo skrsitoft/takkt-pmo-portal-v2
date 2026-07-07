@@ -723,11 +723,7 @@ async function saveWeekly() {
   );
 }
 
-  p.weekly = weekly;
-  storeSave('proj:' + activeId, p);
-  renderSidebar();
-  showToast('✅ Week saved!');
-}
+  
 
 function readWeekly() {
   const bullets = [...document.querySelectorAll('#w_bullets input[type=text]')].map(i=>i.value).filter(Boolean);
