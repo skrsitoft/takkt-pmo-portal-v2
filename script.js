@@ -675,6 +675,9 @@ async function saveWeekly() {
 
     date: p.weekly.date,
 
+    scopeText:
+        p.setup?.scope || '',
+
     overall: p.weekly.health?.overall,
     scope: p.weekly.health?.scope,
     schedule: p.weekly.health?.schedule,
@@ -694,6 +697,8 @@ async function saveWeekly() {
     risks: p.weekly.risks || []
 
 });
+
+
 
       if (p.snapshots.length > 20) {
         p.snapshots =
