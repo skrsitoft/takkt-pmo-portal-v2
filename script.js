@@ -1170,11 +1170,17 @@ function showToast(msg) {
 }
 function showSnapshot(projectId, date) {
 
-    console.log("SNAPSHOT CLICK");
+    const p = projects[projectId];
 
-    console.log(projectId);
+    if (!p) return;
 
-    console.log(date);
+    const snap =
+        p.snapshots.find(
+            s => s.date === date
+        );
+
+    console.log("SNAPSHOT DATA");
+    console.log(snap);
 
 }
 
