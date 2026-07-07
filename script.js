@@ -544,10 +544,13 @@ async function autoSave() {
 // ═══════════════════════════════════════════════════
 // SAVE SETUP
 // ═══════════════════════════════════════════════════
+console.log("SAVE SETUP");
+console.log("ACTIVE ID:", activeId);
+console.log("IS NEW:", activeId.startsWith('p_'));
 async function saveSetup() {
 
   if (!activeId) return;
-
+  console.log("UPDATE PROJECT");
   const p = projects[activeId];
 
   p.setup = readSetup();
@@ -575,7 +578,7 @@ if (!activeId.startsWith('p_')) {
     .eq('id', activeId));
 
 } else {
-
+  console.log("INSERT PROJECT");
   const result = await supabaseClient
     .from('projects')
     .insert([project])
